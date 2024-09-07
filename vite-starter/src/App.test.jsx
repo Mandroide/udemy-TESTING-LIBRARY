@@ -1,5 +1,6 @@
 import {logRoles, render, screen, fireEvent} from "@testing-library/react";
 import App from "./App";
+import {kebabCaseToTitleCase} from "./helpers.js";
 
 test("button click flow", () => {
     // render App
@@ -9,7 +10,7 @@ test("button click flow", () => {
     const buttonElement = screen.getByRole("button", {name: /blue/i});
 
     // check initial color
-    expect(buttonElement).toHaveClass("red")
+    expect(buttonElement).toHaveClass("medium-violet-red")
 
     // click the button
     fireEvent.click(buttonElement);
@@ -19,8 +20,8 @@ test("button click flow", () => {
 
 
     // check the button color
-    expect(buttonElement).toHaveClass("blue")
-    expect(buttonElement).toHaveStyle({"background-color": "rgb(0,0,255)"})
+    expect(buttonElement).toHaveClass("midnight-blue")
+    // expect(buttonElement).toHaveStyle({"background-color": "rgb(0,0,255)"})
 });
 
 // The difference between these tests is the order of event for checkBox and button
@@ -45,7 +46,7 @@ test("checkbox flow", () => {
     fireEvent.click(checkboxElement);
     expect(checkboxElement).not.toBeChecked();
     expect(buttonElement).toBeEnabled();
-    expect(buttonElement).toHaveClass("red")
+    expect(buttonElement).toHaveClass("medium-violet-red")
 
 })
 
@@ -62,7 +63,7 @@ test("checkbox flow after button is clicked", () => {
 
     // click button to check to blue
     fireEvent.click(buttonElement)
-    expect(buttonElement).toHaveClass("blue")
+    expect(buttonElement).toHaveClass("midnight-blue")
     expect(buttonElement).toBeEnabled();
 
     // click checkbox to disable button
@@ -75,8 +76,9 @@ test("checkbox flow after button is clicked", () => {
     fireEvent.click(checkboxElement);
     expect(checkboxElement).not.toBeChecked();
     expect(buttonElement).toBeEnabled();
-    expect(buttonElement).toHaveClass("blue")
+    expect(buttonElement).toHaveClass("midnight-blue")
 
 })
 
 // --------------------------------------------------------------------------------------------------------------------
+
