@@ -1,5 +1,6 @@
-import {fireEvent, render, screen} from "@testing-library/react";
+import {render, screen} from "@testing-library/react";
 import {SummaryForm} from "../summary/SummaryForm.jsx";
+import userEvent from "@testing-library/user-event";
 
 test("checkbox initial conditions", () => {
     render(<SummaryForm/>);
@@ -9,16 +10,36 @@ test("checkbox initial conditions", () => {
     expect(confirmButton).toBeDisabled();
 })
 
-test("checkbox disables button on first click and enables on second click", () => {
+test("checkbox disables button on first click and enables on second click", async () => {
+    const user = userEvent.setup()
     render(<SummaryForm/>);
-    const checkbox = screen.getByRole("checkbox", {name: /terms and conditions/i});
+    const checkboxTermsAndConditions = screen.getByRole("checkbox", {name: /terms and conditions/i});
     const confirmButton = screen.getByRole("button", {name: /confirm order/i});
 
-    fireEvent.click(checkbox);
-    expect(checkbox).toBeChecked();
+    await user.click(checkboxTermsAndConditions);
+    expect(checkboxTermsAndConditions).toBeChecked();
     expect(confirmButton).toBeEnabled();
 
-    fireEvent.click(checkbox);
-    expect(checkbox).not.toBeChecked();
+    await user.click(checkboxTermsAndConditions);
+    expect(checkboxTermsAndConditions).not.toBeChecked();
     expect(confirmButton).toBeDisabled();
+});
+
+test("popover responds to hover", async () => {
+    const user = userEvent.setup()
+    render(<SummaryForm/>);
+
+    // popover starts out hidden
+    let popover = screen.queryByText(/no ice cream will actually be delivered/i)
+    expect(popover).not.toBeInTheDocument();
+
+    // popover appears on mouseover of checkbox label
+    const checkboxTermsAndConditions = screen.getByText(/terms and conditions/i);
+    await user.hover(checkboxTermsAndConditions);
+    popover = screen.getByText(/no ice cream will actually be delivered/i);
+    expect(popover).toBeInTheDocument();
+
+    // popover disappears when we mouse out
+    await user.unhover(checkboxTermsAndConditions);
+    expect(popover).not.toBeInTheDocument();
 })
