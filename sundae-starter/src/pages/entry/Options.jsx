@@ -3,16 +3,19 @@ import axios from "axios";
 import {ScoopOption} from "./ScoopOption.jsx";
 import {Row} from "react-bootstrap";
 import {ToppingOption} from "./ToppingOption.jsx";
+import {AlertBanner} from "../common/AlertBanner.jsx";
 
 export function Options({optionType}) {
     const [items, setItems] = React.useState([]);
+    const [error, setError] = React.useState(false);
     useEffect(() => {
         axios.get(`http://localhost:3030/${optionType}`)
             .then((response) => setItems(response.data))
-            .catch((error) => console.log(error));
+            .catch(() => setError(true));
     }, [optionType]);
 
-    // TODO: replace `null` with ToppingOption when available
+    if (error) return <AlertBanner/>;
+
     const ItemComponent = optionType === "scoops" ? ScoopOption : ToppingOption;
 
     const optionItems = items.map((item) => (
