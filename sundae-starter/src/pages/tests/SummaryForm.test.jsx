@@ -3,7 +3,7 @@ import {SummaryForm} from "../summary/SummaryForm.jsx";
 import userEvent from "@testing-library/user-event";
 
 test("checkbox initial conditions", () => {
-    render(<SummaryForm/>);
+    render(<SummaryForm setOrderPhase={null} />);
     const checkbox = screen.getByRole("checkbox", {name: /terms and conditions/i});
     expect(checkbox).not.toBeChecked();
     const confirmButton = screen.getByRole("button", {name: /confirm order/i});
@@ -12,7 +12,7 @@ test("checkbox initial conditions", () => {
 
 test("checkbox disables button on first click and enables on second click", async () => {
     const user = userEvent.setup()
-    render(<SummaryForm/>);
+    render(<SummaryForm setOrderPhase={null} />);
     const checkboxTermsAndConditions = screen.getByRole("checkbox", {name: /terms and conditions/i});
     const confirmButton = screen.getByRole("button", {name: /confirm order/i});
 
@@ -27,7 +27,7 @@ test("checkbox disables button on first click and enables on second click", asyn
 
 test("popover responds to hover", async () => {
     const user = userEvent.setup()
-    render(<SummaryForm/>);
+    render(<SummaryForm setOrderPhase={null}/>);
 
     // popover starts out hidden
     let popover = screen.queryByText(/no ice cream will actually be delivered/i)

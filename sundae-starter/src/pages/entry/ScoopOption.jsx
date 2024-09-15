@@ -1,10 +1,23 @@
 import {Col, Form, Row} from "react-bootstrap";
 import {useOrderDetails} from "../../contexts/OrderDetails.jsx";
+import PropTypes from "prop-types";
+import {useState} from "react";
 
 export function ScoopOption({name, imagePath}) {
     const { updateItemCount } = useOrderDetails();
-    const handleChange = (e) =>
-        updateItemCount(name, parseInt(e.target.value), "scoops");
+    const [invalidColor, setInvalidColor] = useState(false);
+    const handleChange = (e) => {
+        const value = e.target.value;
+        // Check if can be converted to number
+        if (value % 1 === 0 && value >= 0 && value <= 10) {
+            // disable red color
+            updateItemCount(name, parseInt(value), "scoops");
+            setInvalidColor(false);
+        } else {
+            setInvalidColor(true);
+        }
+    }
+
 
     return (
         <Col xs={12} sm={6} md={4} lg={3} style={{ textAlign: "center" }}>
@@ -14,7 +27,7 @@ export function ScoopOption({name, imagePath}) {
                 alt={`${name} scoop`}
             />
             <Form.Group
-                controlId={`${name}-count`}
+                controlId={`${name.toLowerCase()}-count`}
                 as={Row}
                 style={{ marginTop: "10px" }}
             >
@@ -23,6 +36,7 @@ export function ScoopOption({name, imagePath}) {
                 </Form.Label>
                 <Col xs="5" style={{ textAlign: "left" }}>
                     <Form.Control
+                        isInvalid={invalidColor}
                         type="number"
                         defaultValue={0}
                         onChange={handleChange}
@@ -32,3 +46,8 @@ export function ScoopOption({name, imagePath}) {
         </Col>
     );
 }
+
+ScoopOption.propTypes = {
+    name: PropTypes.string.isRequired,
+    imagePath: PropTypes.string.isRequired,
+};
