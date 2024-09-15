@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {AlertBanner} from "../common/AlertBanner.jsx";
 import {Button} from "react-bootstrap";
+import {SpinnerLoading} from "../common/SpinnerLoading.jsx";
 
 export const OrderConfirmation = ({setOrderPhase}) => {
     const {resetOrder} = useOrderDetails();
@@ -24,6 +25,17 @@ export const OrderConfirmation = ({setOrderPhase}) => {
         })
     }, []);
 
+    const newOrderButton = (<Button className="order-confirmation-button" onClick={handleClick}>
+        Create new order
+    </Button>);
+
+    if (error) {
+        return <>
+            <AlertBanner/>
+            {newOrderButton}
+        </>
+    }
+
     if (orderNumber) {
         return (
             <div className="order-confirmation">
@@ -36,19 +48,12 @@ export const OrderConfirmation = ({setOrderPhase}) => {
                 <div className="order-confirmation-body">
                     <p>as per our terms and conditions, nothing will happen now</p>
                 </div>
-                <Button className="order-confirmation-button" onClick={handleClick}>
-                    Create new order
-                </Button>
+                {newOrderButton}
             </div>
         )
     } else {
-        return <div>Loading</div>
+        return <SpinnerLoading/>
     }
-
-    // if (error) {
-    //     // @ts-ignore
-    //     return <AlertBanner/>;
-    // }
 
 
 }
