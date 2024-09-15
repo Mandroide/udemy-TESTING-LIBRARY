@@ -15,6 +15,7 @@ export function ScoopOption({name, imagePath}) {
             setInvalidColor(false);
         } else {
             setInvalidColor(true);
+            updateItemCount(name, 0, "scoops");
         }
     }
 
